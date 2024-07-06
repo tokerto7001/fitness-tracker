@@ -13,6 +13,10 @@ import { z } from "zod";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import * as actions from '@/actions';
+import { useFormState } from "react-dom";
+import { useEffect } from "react";
+import { useToast } from "../ui/use-toast";
 
 interface AuthenticationFormProps {
   authType: "Login" | "Register";
@@ -36,23 +40,39 @@ export default function AuthenticationForm({
       password: "",
     },
   });
-  const { handleSubmit, control, setError, reset, formState: {isSubmitting} } = form;
 
-  async function onSubmit(formValues: z.infer<typeof formSchema>) {
-    const parseResult = formSchema.safeParse(formValues);
-    if (parseResult.error) {
-      const fieldErrors = parseResult.error.flatten().fieldErrors;
+  const { toast } = useToast();
+  const [formState, action] = useFormState(authType === 'Login' ? actions.signin : actions.signup, {error: {}});
+
+  const { control, setError, reset, formState: {isSubmitting} } = form;
+
+  useEffect(() => {
+    if(formState.success) {
+      toast({
+        title: 'Signup is successfull, please check your email!',
+        variant: 'success'
+      })
+    } else {
+      const fieldErrors = formState.error;
       Object.keys(fieldErrors).map((key) => {
-        setError(key as keyof z.infer<typeof formSchema>, {
-          type: "custom",
-          message: (
-            fieldErrors[key as keyof z.infer<typeof formSchema>] as string[]
-          ).toString(),
-        });
+        if(key !== '_form') {
+          setError(key as keyof z.infer<typeof formSchema>, {
+            type: "custom",
+            message: (
+              fieldErrors[key as keyof z.infer<typeof formSchema>] as string[]
+            ).toString(),
+          });
+        } else if (key === '_form' && fieldErrors[key as keyof z.infer<typeof formSchema>]?.length){
+          console.log(fieldErrors[key as keyof z.infer<typeof formSchema>]?.toString())
+          toast({
+            title: fieldErrors[key as keyof z.infer<typeof formSchema>]?.toString(),
+            variant: 'destructive'
+          })
+        }
       });
-      reset({ email: "", password: "" }, { keepErrors: true });
     }
-  }
+    reset({ email: "", password: "" }, { keepErrors: true });
+  }, [formState]);
 
   return (
     <div className="h-[80%] w-[50%] flex-col">
@@ -65,7 +85,7 @@ export default function AuthenticationForm({
       <div className="h-4/5">
         <Form {...form}>
           <form
-            onSubmit={handleSubmit(onSubmit)}
+            action={action}
             className="flex flex-col gap-8"
           >
             <FormField
@@ -95,6 +115,7 @@ export default function AuthenticationForm({
                     <Input
                       className="border-gray-300 focus:border-black border-2 h-12"
                       placeholder="password"
+                      type="password"
                       {...field}
                     />
                   </FormControl>
