@@ -1,6 +1,10 @@
 'use server';
 
+import { db } from '@/db';
+import { users } from '@/db/schema';
+import { compareStrings, hashString } from '@/utils/bcrypt';
 import { createClient } from '@/utils/supabaseServerClient';
+import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import z from 'zod';
@@ -38,13 +42,47 @@ export async function signin(formStatus: AuthFormState, formData: FormData): Pro
             }
         }
     }
-    const supabase = createClient()
-    const { error } = await supabase.auth.signInWithPassword(validationResult.data);
 
-    if(error) return {
-        success: false,
-        error: {
-            _form: [error.message]
+    const userData = validationResult.data;
+
+    try {
+        const user = await db.query.users.findFirst({
+            where: (users, {eq}) => eq(users.email, userData.email),
+            columns: {
+                email: true,
+                password: true
+            }
+        });
+        if(!user) return {
+            success: false,
+            error: {
+                _form: ['Wrong email or password']
+            }
+        }
+    
+        const isPasswordCorrect = await compareStrings(userData.password, user.password);
+        if(!isPasswordCorrect) return {
+            success: false,
+            error: {
+                _form: ['Wrong email or password']
+            }
+        }
+
+        const supabase = createClient()
+        const { error } = await supabase.auth.signInWithPassword(userData);
+    
+        if(error) return {
+            success: false,
+            error: {
+                _form: [error.message]
+            }
+        }
+    } catch(error) {
+        return {
+            success: false,
+            error: {
+                _form: ['Something went wrong']
+            }
         }
     }
 
@@ -69,6 +107,17 @@ export async function signup(formStatus: AuthFormState, formData: FormData): Pro
         }
     }
 
+    try {
+        const user = await db.query.users.findFirst({
+            where: eq(users.email, validationResult.data.email)
+        });
+        if(user) return {
+            success: false,
+            error: {
+                _form: ['User already exists']
+            }
+        };
+
     const supabase = createClient()
 
     const data = {
@@ -87,8 +136,20 @@ export async function signup(formStatus: AuthFormState, formData: FormData): Pro
         }
     }
 
-    // save the user to the db
-    
+    const hashedPassword = await hashString(data.password);
+    data.password = hashedPassword;
+
+    await db.insert(users).values(data);
+
+    } catch(error) {
+    return {
+        success: false,
+        error: {
+            _form: ['Something went wrong']
+        }
+    };
+    }
+
     return {
         success: true,
         error: {}

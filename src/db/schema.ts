@@ -3,7 +3,6 @@ import { date, integer, pgEnum, pgTable, serial, text } from "drizzle-orm/pg-cor
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
-  fullName: text('full_name').notNull(),
   email: text('email').unique().notNull(),
   password: text('password').notNull()
 });
