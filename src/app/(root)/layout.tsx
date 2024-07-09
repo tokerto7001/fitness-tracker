@@ -6,7 +6,7 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="bg-black h-screen w-screen flex flex-col overflow-hidden">
+    <div className="bg-black h-screen w-screen flex flex-col overflow-hidden text-white">
       <Header />
       <div className="flex-grow overflow-hidden">{children}</div>
     </div>
