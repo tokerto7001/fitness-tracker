@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { date, integer, pgEnum, pgTable, serial, text } from "drizzle-orm/pg-core";
 
 export const users = pgTable('users', {
@@ -114,3 +114,11 @@ export const workoutRecordsWeightsRelations = relations(workoutRecordsWeights, (
   })
 }));
 
+export type Users = InferSelectModel<typeof users>;
+export type Exercises = InferSelectModel<typeof exercises> & { bodyPart:  BodyParts};
+export type BodyParts = InferSelectModel<typeof bodyParts>;
+export type Workouts = InferSelectModel<typeof workouts> & { user: Users };
+export type WorkoutExercises = InferSelectModel<typeof workoutExercises> & { exercise: Exercises } & { workout: Workouts };
+export type WorkoutSchedule= InferSelectModel<typeof workoutSchedules> & { workout: Workouts };
+export type WorkoutRecords= InferSelectModel<typeof workoutRecords> & { workout: Workouts };
+export type WorkoutRecordsWeights= InferSelectModel<typeof workoutRecordsWeights> & { workoutRecord: WorkoutRecords } & { exercise: Exercises };
