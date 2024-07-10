@@ -1,7 +1,7 @@
 'use server';
 
 import { db } from '@/db';
-import { users } from '@/db/schema';
+import { bodyPartsEnum, users } from '@/db/schema';
 import { compareStrings, hashString } from '@/utils/bcrypt';
 import { createClient } from '@/utils/supabaseServerClient';
 import { eq } from 'drizzle-orm';
@@ -155,4 +155,14 @@ export async function signup(formStatus: AuthFormState, formData: FormData): Pro
         error: {}
     }
 
+}
+
+type BodyPartEnum = "arm" | "chest" | "back" | "core" | "leg";
+export const getBodyParts = async(): Promise<{name: BodyPartEnum, id: number}[]> => {
+    try{
+        const data = await db.query.bodyParts.findMany({});
+        return data;
+    }catch(err){
+        throw Error((err as Error).message);
+    }
 }

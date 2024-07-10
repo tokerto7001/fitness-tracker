@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Dialog,
   DialogContent,
@@ -12,18 +14,27 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectGroup,
 } from "@/components/ui/select";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
+import { useQuery } from "@tanstack/react-query";
+import { getBodyParts } from "@/actions";
 
 export default function AddExerciseDialog() {
+
+  const { data } = useQuery({
+    queryKey: ['bodyParts'],
+    queryFn: getBodyParts
+  });
+  
   return (
     <Dialog>
       <DialogTrigger className="border border-orange-600 w-32 h-12 rounded-md">
         Add Exercise
       </DialogTrigger>
-      <DialogContent className="bg-transparent border-orange-600 text-white h-[65%]">
+      <DialogContent className="bg-black border-orange-600 text-white h-[65%]">
         <DialogHeader>
           <DialogTitle className="text-center">Add New Exercise</DialogTitle>
           <DialogDescription>
@@ -47,6 +58,11 @@ export default function AddExerciseDialog() {
                 <SelectValue placeholder="Body Part" />
               </SelectTrigger>
               <SelectContent>
+                {
+                  data && data.map((bodyPart) => (
+                     <SelectItem value={bodyPart.name} key={bodyPart.name}>{bodyPart.name}</SelectItem> 
+                  ))
+                }
               </SelectContent>
             </Select>
             <Label
