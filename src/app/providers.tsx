@@ -1,5 +1,6 @@
 'use client'
 
+import AuthContextProvider from '@/context/authContext'
 // Since QueryClientProvider relies on useContext under the hood, we have to put 'use client' on top
 import {
   isServer,
@@ -44,6 +45,10 @@ export default function Providers({ children }: {children: ReactNode}) {
   const queryClient = getQueryClient()
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthContextProvider>
+        {children}
+      </AuthContextProvider>
+    </QueryClientProvider>
   )
 }

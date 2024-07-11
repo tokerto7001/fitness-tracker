@@ -157,12 +157,8 @@ export async function signup(formStatus: AuthFormState, formData: FormData): Pro
 
 }
 
-type BodyPartEnum = "arm" | "chest" | "back" | "core" | "leg";
-export const getBodyParts = async(): Promise<{name: BodyPartEnum, id: number}[]> => {
-    try{
-        const data = await db.query.bodyParts.findMany({});
-        return data;
-    }catch(err){
-        throw Error((err as Error).message);
-    }
-}
+export async function signout():Promise<void>{
+    const supabase = createClient();
+
+    await supabase.auth.signOut();
+} 
