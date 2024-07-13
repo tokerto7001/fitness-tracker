@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "drizzle:generate": "npx drizzle-kit generate",
-    "drizzle:migrate": "npx tsx src/db/migrate.ts",
+    "generate": "npx drizzle-kit generate",
+    "migrate": "npx tsx src/db/migrate.ts",
     "seed": "npx tsx seed.ts"
   },
   "dependencies": {

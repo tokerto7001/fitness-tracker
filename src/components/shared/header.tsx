@@ -15,8 +15,8 @@ export default function Header() {
         <Link href='/'>Dashboard</Link>
       </div>
       <div className="flex justify-between w-1/3 items-center">
-        <Link className="hover:text-orange-600" href='/workouts'><span>My Workouts</span></Link>
-        <Link className="hover:text-orange-600" href='/schedule'><span>My Records</span></Link>
+        <Link className="hover:text-orange-600" href='/workouts'><span>Workouts</span></Link>
+        <Link className="hover:text-orange-600" href='/schedule'><span>Records</span></Link>
         <Link className="hover:text-orange-600" href='/profile'><span>Profile</span></Link>
         <form action={signout}>
           <CustomButton
