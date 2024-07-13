@@ -125,8 +125,9 @@ export async function signup(formStatus: AuthFormState, formData: FormData): Pro
       password: validationResult.data.password
     }
   
-    const { error } = await supabase.auth.signUp(data)
-  
+    const { error, data: userData } = await supabase.auth.signUp(data)
+    
+    console.dir(user, {depth: null});
     if (error) {
         return {
             success: false,
@@ -139,7 +140,10 @@ export async function signup(formStatus: AuthFormState, formData: FormData): Pro
     const hashedPassword = await hashString(data.password);
     data.password = hashedPassword;
 
-    await db.insert(users).values(data);
+    await db.insert(users).values({
+        ...data,
+        id: userData.user?.id!
+    });
 
     } catch(error) {
     return {
