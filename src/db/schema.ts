@@ -2,7 +2,7 @@ import { InferSelectModel, relations } from "drizzle-orm";
 import { date, integer, pgEnum, pgTable, serial, text } from "drizzle-orm/pg-core";
 
 export const users = pgTable('users', {
-  id: serial('id').primaryKey(),
+  id: text('id').primaryKey(),
   email: text('email').unique().notNull(),
   password: text('password').notNull()
 });
@@ -24,7 +24,7 @@ export const bodyParts = pgTable('body_parts', {
 export const workouts = pgTable('workouts', {
   id: serial('id').primaryKey(),
   name: text('name').unique().notNull(),
-  userId: integer('user_id').references(() => users.id)
+  userId: text('user_id').references(() => users.id)
 });
 
 export const workoutExercises = pgTable('workout_exercises', {
@@ -71,7 +71,7 @@ export const exerciseRelations = relations(exercises, ({one, many}) => ({
 }));
 
 export const userRelations = relations(users, ({many}) => ({
-  workout: many(users)
+  workout: many(workouts)
 }));
 
 export const workoutRelations = relations(workouts, ({one, many}) => ({
