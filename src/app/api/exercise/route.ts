@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { bodyParts, exercises } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { NextRequest } from "next/server";
 import { z } from "zod";
 
@@ -76,6 +77,8 @@ export async function POST(req: NextRequest) {
       imageUrl,
     });
 
+    revalidatePath('/');
+    
     return Response.json(
       {
         message: "Exercise added successfuly",

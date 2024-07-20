@@ -32,6 +32,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import CustomButton from "../shared/button";
 import { supabase } from "@/context/authContext";
 import { useToast } from "../ui/use-toast";
+import { useState } from "react";
 
 const formSchema = z.object({
   name: z
@@ -74,7 +75,10 @@ export default function AddExerciseDialog() {
     },
     resolver: zodResolver(formSchema),
   });
-  const { control, handleSubmit } = form;
+  const { control, handleSubmit, reset } = form;
+
+  const [dialogStatus, setDialogStatus] = useState(false);
+
 
   const formSubmit = async(data: SchemaType) => {
     const fileName = Date.now() + '-' + data.image.name;
@@ -94,11 +98,13 @@ export default function AddExerciseDialog() {
         title: 'Exercise added successfuly',
         variant: 'success'
       })
+      reset();
+      setDialogStatus(false);
     }catch(err: any){
       const {data: urlData} = supabase.storage.from('fitness-tracker').getPublicUrl(fileName);
       if(urlData) await supabase.storage.from('fitness-tracker').remove([fileName]);
       toast({
-        title: err.response.data.message || err.message || 'Something went wrong',
+        title: err.response?.data?.message || err.message || 'Something went wrong',
         variant: 'destructive'
       });
     }
@@ -213,7 +219,7 @@ export default function AddExerciseDialog() {
   if (error) jsxToRender = <>An Error Occurred</>;
 
   return (
-    <Dialog>
+    <Dialog open={dialogStatus} onOpenChange={setDialogStatus}>
       <DialogTrigger className="border border-orange-600 w-32 h-12 rounded-md">
         Add Exercise
       </DialogTrigger>
