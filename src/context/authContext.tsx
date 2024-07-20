@@ -6,11 +6,12 @@ export const AuthContext = createContext<{user: User | null}>({
     user: null
 });
 
+export const supabase = createClient();
+
 export default function AuthContextProvider({children}: {children: ReactNode}){
     const [user, setUser] = useState<User | null>(null);
 
     async function getUser(){
-        const supabase = createClient();
         const { data } = await supabase.auth.getUser();
         if(data) setUser(data.user);
     }
