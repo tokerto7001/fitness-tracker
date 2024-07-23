@@ -1,3 +1,7 @@
+import '@fortawesome/fontawesome-svg-core/styles.css';
+import {config} from '@fortawesome/fontawesome-svg-core';
+config.autoAddCss = false;
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -18,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className=''>
+      <body className={inter.className}>
         <Providers>
         {children}
         </Providers>

@@ -14,9 +14,9 @@ export default async function Layout({
   if(error || !data?.user) redirect('/signin');
 
   return (
-    <div className="bg-black h-screen w-screen flex flex-col overflow-hidden text-white">
+    <div className="bg-black h-screen w-screen flex flex-col overflow-auto text-white">
       <Header />
-      <div className="flex-grow overflow-hidden">{children}</div>
+      {children}
     </div>
   );
 }
