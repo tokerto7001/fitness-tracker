@@ -5,11 +5,12 @@ interface CustomButtonProps {
     className?: string
     children: ReactNode;
     type?: ButtonHTMLAttributes<HTMLButtonElement>['type']
+    disabled?: boolean;
 }
 
-export default function CustomButton({children, className, type = 'button'}: CustomButtonProps){
+export default function CustomButton({children, className, type = 'button', disabled = false}: CustomButtonProps){
     return (
-        <Button className={className} type={type}>
+        <Button disabled={disabled} className={className} type={type}>
             {children}
         </Button>
     )

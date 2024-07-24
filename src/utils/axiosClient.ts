@@ -26,4 +26,12 @@ export class AxiosClient {
             throw error;
         }
     }
+
+    public async DELETE<T, U>(config: AxiosRequestConfig, data?: U): Promise<T>{
+        try{
+            return (await this.axiosInstance({...config, method: 'DELETE'}));
+        } catch(error){
+            throw error;
+        }
+    }
 }

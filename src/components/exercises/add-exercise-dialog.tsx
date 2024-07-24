@@ -33,6 +33,7 @@ import CustomButton from "../shared/button";
 import { supabase } from "@/context/authContext";
 import { useToast } from "../ui/use-toast";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z
@@ -65,6 +66,7 @@ export default function AddExerciseDialog() {
   })
 
   const {toast} = useToast();
+  const router = useRouter();
 
   const form = useForm<SchemaType>({
     defaultValues: {
@@ -75,7 +77,7 @@ export default function AddExerciseDialog() {
     },
     resolver: zodResolver(formSchema),
   });
-  const { control, handleSubmit, reset } = form;
+  const { control, handleSubmit, reset, formState: {isSubmitting} } = form;
 
   const [dialogStatus, setDialogStatus] = useState(false);
 
@@ -83,7 +85,7 @@ export default function AddExerciseDialog() {
   const formSubmit = async(data: SchemaType) => {
     const fileName = Date.now() + '-' + data.image.name;
     try{
-      const {data: uploadData, error: uploadError} = await supabase.storage.from('fitness-tracker').upload(fileName, data.image)
+      const { error: uploadError} = await supabase.storage.from('fitness-tracker').upload(fileName, data.image)
       if(uploadError) throw Error(uploadError.message);
       const {data: urlData} = supabase.storage.from('fitness-tracker').getPublicUrl(fileName);
 
@@ -95,11 +97,13 @@ export default function AddExerciseDialog() {
       }
       await mutation.mutateAsync(dataToSend);
       toast({
-        title: 'Exercise added successfuly',
+        title: 'Exercise added successfully',
         variant: 'success'
       })
       reset();
       setDialogStatus(false);
+      router.push('/');
+      router.refresh();
     }catch(err: any){
       const {data: urlData} = supabase.storage.from('fitness-tracker').getPublicUrl(fileName);
       if(urlData) await supabase.storage.from('fitness-tracker').remove([fileName]);
@@ -206,8 +210,11 @@ export default function AddExerciseDialog() {
               <CustomButton
                 type="submit"
                 className="border border-orange-600 bg-black hover:bg-orange-600"
+                disabled={isSubmitting}
               >
-                Submit
+                {
+                  isSubmitting ? '...' : 'Submit'
+                } 
               </CustomButton>
             </div>
           </form>
