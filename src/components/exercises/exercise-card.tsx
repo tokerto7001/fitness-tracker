@@ -11,7 +11,7 @@ import {
 import { Exercises } from "@/db/schema";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faP, faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import {
   Dialog,
   DialogContent,
@@ -69,57 +69,83 @@ export default function ExerciseCard({ exercise }: ExerciseCardProps) {
   }
 
   return (
-    <Card className="w-[60%] md:w-[75%] h-80  bg-black text-white border-orange-600  p-2">
-      <CardHeader className="flex flex-row w-full h-[5%] justify-end items-end gap-3 p-0 m-0">
-        <FontAwesomeIcon
-          icon={faPen}
-          className="hover:text-orange-600 cursor-pointer"
-        />
-        <Dialog open={deleteDialogState} onOpenChange={setDeleteDialogState}>
-          <DialogTrigger>
-            <FontAwesomeIcon
-              icon={faTrash}
-              className="hover:text-orange-600 cursor-pointer"
-            />
-          </DialogTrigger>
-          <DialogContent className="bg-black text-white border border-orange-600">
-            Are you sure want to delete this exercise?
-            <DialogFooter>
-              <Button
-                disabled={loading}
-                className="bg-red-700 text-white hover:bg-black hover:text-red-700 hover:border-red-700 hover:border w-16"
-                onClick={handleDeleteExercise}
-              >
-                {loading ? "..." : "YES"}
-              </Button>
-              <Button
-                disabled={loading}
-                className="bg-blue-800 text-white hover:bg-black hover:text-blue-800 hover:border-blue-800 hover:border w-16"
-                onClick={() => setDeleteDialogState(false)}
-              >
-                {loading ? "..." : "NO"}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </CardHeader>
-      <div className="flex flex-col items-center justify-center gap-3 h-full">
-        <CardTitle className="text-center text-orange-600">
-          {exercise.name}
-        </CardTitle>
-        <div className="h-36">
-          <CardDescription>
-            <Image
-              alt="exerciseImage"
-              src={exercise.imageUrl}
-              width={200}
-              height={200}
-            />
-          </CardDescription>
-        </div>
-        <p className="text-center">{exercise.bodyPart.name} exercise</p>
-        <p className="text-center">{exercise.description}</p>
-      </div>
-    </Card>
+<Card className="w-[60%] md:w-[85%] h-80 bg-white text-black rounded-xl shadow-xl relative overflow-hidden">
+  <div className="h-[60%] relative w-full">
+    <CardHeader className="flex flex-row w-full justify-end items-start gap-3 p-1 absolute top-0 right-0 z-10 space-y-0">
+      <FontAwesomeIcon
+        icon={faPen}
+        className="text-grass-green cursor-pointer"
+      />
+            {/* <Dialog open={deleteDialogState} onOpenChange={setDeleteDialogState}>
+        <DialogTrigger>
+          <FontAwesomeIcon
+            icon={faPen}
+            className="text-grass-green cursor-pointer"
+          />
+        </DialogTrigger>
+        <DialogContent className="bg-slate-200 text-red-500 border">
+          Are you sure want to delete this exercise?
+          <DialogFooter>
+            <Button
+              disabled={loading}
+              className="bg-red-700 text-white hover:bg-transparent hover:text-red-700 hover:border-red-700 hover:border w-16"
+              onClick={handleDeleteExercise}
+            >
+              {loading ? "..." : "YES"}
+            </Button>
+            <Button
+              disabled={loading}
+              className="bg-blue-800 text-white hover:bg-transparent hover:text-blue-800 hover:border-blue-800 hover:border w-16"
+              onClick={() => setDeleteDialogState(false)}
+            >
+              {loading ? "..." : "NO"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog> */}
+      <Dialog open={deleteDialogState} onOpenChange={setDeleteDialogState}>
+        <DialogTrigger asChild className="m-0 p-0">
+          <FontAwesomeIcon
+            icon={faTrash}
+            className="text-red-500 cursor-pointer mt-0 p-0"
+          />
+        </DialogTrigger>
+        <DialogContent className="bg-slate-200 text-red-500 border">
+          Are you sure want to delete this exercise?
+          <DialogFooter>
+            <Button
+              disabled={loading}
+              className="bg-red-700 text-white hover:bg-transparent hover:text-red-700 hover:border-red-700 hover:border w-16"
+              onClick={handleDeleteExercise}
+            >
+              {loading ? "..." : "YES"}
+            </Button>
+            <Button
+              disabled={loading}
+              className="bg-blue-800 text-white hover:bg-transparent hover:text-blue-800 hover:border-blue-800 hover:border w-16"
+              onClick={() => setDeleteDialogState(false)}
+            >
+              {loading ? "..." : "NO"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </CardHeader>
+    <Image
+      alt="exerciseImage"
+      src={exercise.imageUrl}
+      fill={true}
+      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+    />
+  </div>
+  <div className="flex flex-col items-center gap-3 h-full mt-3">
+    <CardTitle className="text-center text-grass-green">
+      {exercise.name}
+    </CardTitle>
+    <p className="text-center">{exercise.bodyPart.name} exercise</p>
+    <p className="text-center">{exercise.description}</p>
+  </div>
+</Card>
+
   );
 }

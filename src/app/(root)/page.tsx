@@ -24,7 +24,7 @@ export default async function Home({searchParams}: HomeProps) {
 
   return (
     <div className="w-screen md:h-screen m-auto pt-10 md:flex md:flex-row md:justify-between md:w-[80%] flex flex-col-reverse gap-5">
-        <div className="md:w-4/5 md:grid md:grid-cols-2 md:gap-x-1 w-full flex flex-col items-center gap-8 md:items-stretch md:gap-0">
+        <div className="md:w-4/5 md:grid md:grid-cols-2 md:gap-5 w-full flex flex-col items-center gap-8 md:items-stretch ">
         {
           exercises.map((exercise) => (
               <ExerciseCard exercise={exercise} key={exercise.id}/>

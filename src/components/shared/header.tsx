@@ -10,17 +10,17 @@ export default function Header() {
   const { user } = useContext(AuthContext);
 
   return (
-    <div className=" border-b border-orange-500 h-20 text-white flex justify-between px-20 items-center">
+    <div className="h-20 flex justify-between px-20 items-center shadow-md">
       <div className="w-2/3">
         <Link href='/'>Dashboard</Link>
       </div>
       <div className="flex justify-between w-1/3 items-center">
-        <Link className="hover:text-orange-600" href='/workouts'><span>Workouts</span></Link>
-        <Link className="hover:text-orange-600" href='/schedule'><span>Records</span></Link>
-        <Link className="hover:text-orange-600" href='/profile'><span>Profile</span></Link>
+        <Link className="hover:text-grass-green" href='/workouts'><span>Workouts</span></Link>
+        <Link className="hover:text-grass-green" href='/schedule'><span>Records</span></Link>
+        <Link className="hover:text-grass-green" href='/profile'><span>Profile</span></Link>
         <form action={signout}>
           <CustomButton
-          className="bg-transparent hover:bg-orange-600"
+          className="bg-transparent hover:bg-grass-green hover:text-white border-grass-green border text-grass-green"
           type="submit"
           >Logout</CustomButton>
         </form>

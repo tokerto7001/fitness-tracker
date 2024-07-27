@@ -116,7 +116,7 @@ export default function AddExerciseDialog() {
 
   let jsxToRender = (
     <DialogHeader>
-      <DialogTitle className="text-center">Add New Exercise</DialogTitle>
+      <DialogTitle className="text-center text-white">Add New Exercise</DialogTitle>
         <Form {...form}>
           <form onSubmit={handleSubmit(formSubmit)} className="h-[100%]">
             <div className="w-[80%] m-auto mt-2 flex flex-col h-[100%]">
@@ -125,7 +125,7 @@ export default function AddExerciseDialog() {
                 name="name"
                 render={({ field }) => (
                   <FormItem className="h-1/5">
-                    <FormLabel className="text-orange-600">Name</FormLabel>
+                    <FormLabel className="text-grass-green">Name</FormLabel>
                     <FormControl>
                       <Input className="text-black" placeholder="Name" {...field} />
                     </FormControl>
@@ -139,7 +139,7 @@ export default function AddExerciseDialog() {
                 name="bodyPart"
                 render={({ field }) => (
                   <FormItem className="h-1/5">
-                    <FormLabel htmlFor="bodyPart" className="text-orange-600">
+                    <FormLabel htmlFor="bodyPart" className="text-grass-green">
                       Body Part
                     </FormLabel>
                     <Select
@@ -170,7 +170,7 @@ export default function AddExerciseDialog() {
                 name="description"
                 render={({ field }) => (
                   <FormItem className="h-1/5 mb-7">
-                    <FormLabel className="text-orange-600">
+                    <FormLabel className="text-grass-green">
                       Description
                     </FormLabel>
                     <FormControl>
@@ -192,7 +192,7 @@ export default function AddExerciseDialog() {
                 name="image"
                 render={({ field }) => (
                   <FormItem className="h-1/5">
-                    <FormLabel className="text-orange-600">Image</FormLabel>
+                    <FormLabel className="text-grass-green">Image</FormLabel>
                     <FormControl>
                       <Input
                         type="file"
@@ -209,7 +209,7 @@ export default function AddExerciseDialog() {
               />
               <CustomButton
                 type="submit"
-                className="border border-orange-600 bg-black hover:bg-orange-600"
+                className=" bg-black hover:bg-grass-green"
                 disabled={isSubmitting}
               >
                 {
@@ -227,10 +227,10 @@ export default function AddExerciseDialog() {
 
   return (
     <Dialog open={dialogStatus} onOpenChange={setDialogStatus}>
-      <DialogTrigger className="border border-orange-600 w-32 h-12 rounded-md">
+      <DialogTrigger className="border border-grass-green w-32 h-12 rounded-md text-grass-green">
         Add Exercise
       </DialogTrigger>
-      <DialogContent className="bg-black border-orange-600 text-white h-[80%]">
+      <DialogContent className="bg-slate-200 text-white h-[80%] border-none">
         {jsxToRender}
       </DialogContent>
     </Dialog>
