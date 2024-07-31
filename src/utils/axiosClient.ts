@@ -34,4 +34,12 @@ export class AxiosClient {
             throw error;
         }
     }
+
+    public async PATCH<T, U>(config: AxiosRequestConfig, data: U): Promise<T>{
+        try{
+            return (await this.axiosInstance({...config, method: 'PATCH', data}));
+        } catch(error){
+            throw error;
+        }
+    }
 }
