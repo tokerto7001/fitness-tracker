@@ -98,3 +98,44 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+const getExercisesSchema = z.object({
+  page: z.string().optional().default('1').transform((data) => +data)
+}).strict();
+
+export async function GET(req: NextRequest) {
+  try{
+    const page = req.nextUrl.searchParams.get('page');
+    const result = getExercisesSchema.safeParse({page});
+    if(result.error) return Response.json({
+      message: 'Please provide valid options'
+    }, {
+      status: 400
+    });
+
+    const exercises = await db.query.exercises.findMany({
+      with: {
+        bodyPart: true
+      },
+      limit: 3,
+      offset: (result.data?.page - 1) * 3
+    })
+    return Response.json(
+      {
+        data: exercises
+      },
+      {
+        status: 200,
+      }
+    );
+  }catch(err: any) {
+    return Response.json(
+      {
+        message: "Something went wrong",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+}
