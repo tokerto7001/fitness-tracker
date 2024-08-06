@@ -117,8 +117,8 @@ export async function GET(req: NextRequest) {
       with: {
         bodyPart: true
       },
-      limit: 3,
-      offset: (result.data?.page - 1) * 3
+      limit: 4,
+      offset: (result.data?.page - 1) * 4
     })
     return Response.json(
       {

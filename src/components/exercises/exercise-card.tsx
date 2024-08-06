@@ -14,7 +14,7 @@ interface ExerciseCardProps {
 
 export default function ExerciseCard({ exercise }: ExerciseCardProps) {
   return (
-    <Card className="w-[60%] md:w-[85%] h-80 bg-white text-black rounded-xl shadow-xl relative overflow-hidden text-sm md:text-md">
+    <Card className="w-[60%] md:w-[85%] h-72 bg-white text-black rounded-xl shadow-xl relative overflow-hidden text-sm md:text-md">
       <div className="h-[60%] relative w-full">
         <CardHeader className="flex flex-row w-full justify-end items-start gap-3 p-1 absolute top-0 right-0 z-10 space-y-0">
           <UpdateExerciseDialog exerciseId={exercise.id} data={exercise} />

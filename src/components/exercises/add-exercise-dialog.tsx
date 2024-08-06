@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addExercise, getBodyParts } from "@/services";
 import {
   Form,
@@ -81,6 +81,7 @@ export default function AddExerciseDialog() {
 
   const [dialogStatus, setDialogStatus] = useState(false);
 
+  const queryClient = useQueryClient();
 
   const formSubmit = async(data: SchemaType) => {
     const fileName = Date.now() + '-' + data.image.name;
@@ -96,6 +97,7 @@ export default function AddExerciseDialog() {
         imageUrl: urlData.publicUrl
       }
       await mutation.mutateAsync(dataToSend);
+      queryClient.invalidateQueries({queryKey: ['exercises']});
       toast({
         title: 'Exercise added successfully',
         variant: 'success'
@@ -103,7 +105,6 @@ export default function AddExerciseDialog() {
       reset();
       setDialogStatus(false);
       router.push('/');
-      router.refresh();
     }catch(err: any){
       const {data: urlData} = supabase.storage.from('fitness-tracker').getPublicUrl(fileName);
       if(urlData) await supabase.storage.from('fitness-tracker').remove([fileName]);
@@ -227,7 +228,7 @@ export default function AddExerciseDialog() {
 
   return (
     <Dialog open={dialogStatus} onOpenChange={setDialogStatus}>
-      <DialogTrigger className="border border-grass-green w-32 h-12 rounded-md text-grass-green">
+      <DialogTrigger className="border border-grass-green w-32 h-12 rounded-md text-grass-green hover:bg-grass-green hover:text-white">
         Add Exercise
       </DialogTrigger>
       <DialogContent className="bg-slate-200 text-white h-[80%] border-none">

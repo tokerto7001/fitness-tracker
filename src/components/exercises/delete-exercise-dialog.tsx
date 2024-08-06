@@ -11,7 +11,7 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { useToast } from "../ui/use-toast";
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteExercise } from "@/services";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
@@ -33,7 +33,8 @@ export default function DeleteExerciseDialog({ exerciseId }: DeleteExerciseProps
 
     const router = useRouter();
     const { toast } = useToast();
-  
+    const queryClient = useQueryClient();
+
     const [deleteDialogState, setDeleteDialogState] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -46,8 +47,8 @@ export default function DeleteExerciseDialog({ exerciseId }: DeleteExerciseProps
             variant: "success",
           });
           setDeleteDialogState(false);
+          queryClient.invalidateQueries({queryKey: ['exercises']});
           router.push("/");
-          router.refresh();
         } catch (err: any) {
           toast({
             variant: "destructive",

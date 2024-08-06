@@ -30,7 +30,7 @@ import CustomButton from "../shared/button";
 import { z } from "zod";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getBodyParts, updateExercise } from "@/services";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -101,7 +101,7 @@ export default function UpdateExerciseDialog({
   } = form;
 
   const {toast} = useToast();
-  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const [updateDialogState, setUpdateDialogState] = useState(false);
   const [updateImage, setUpdateImage] = useState(false);
@@ -124,6 +124,7 @@ export default function UpdateExerciseDialog({
       }
   
       await mutation.mutateAsync(dataToSend);
+      queryClient.invalidateQueries({queryKey: ['exercises']});
       toast({
         title: 'Exercise added successfully',
         variant: 'success'
@@ -131,7 +132,6 @@ export default function UpdateExerciseDialog({
       reset();
       setUpdateDialogState(false);
       setUpdateImage(false);
-      router.refresh();
     } catch(err: any) {
       if(data.image) {
         await supabase.storage.from('fitness-tracker').remove([fileName]);
