@@ -10,7 +10,6 @@ export async function GET() {
     const userWorkouts = await db.query.workouts.findMany({
         where: eq(workouts.userId, id)
     });
-    console.log(userWorkouts);
     
     return Response.json(
       {
