@@ -15,7 +15,7 @@ interface HomeProps {
 }
 
 export interface GetExercisesQueryParams {
-  page: number;
+  page?: number;
 }
 
 export default function Home({ searchParams }: HomeProps) {

@@ -1,5 +1,6 @@
 'use client';
 
+import AddWorkoutDialog from "@/components/workouts/add-workout-dialog";
 import { getWorkouts } from "@/services/workouts";
 import { useQuery } from "@tanstack/react-query";
 
@@ -16,7 +17,7 @@ export default function WorkoutsPage(){
                 Workout Cards
             </div>
             <div className="md:w-1/5 md:justify-end">
-                Add workout Trigger
+                <AddWorkoutDialog />
             </div>
         </div>
     )
