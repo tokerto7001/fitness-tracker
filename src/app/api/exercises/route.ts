@@ -100,29 +100,35 @@ export async function POST(req: NextRequest) {
 }
 
 const getExercisesSchema = z.object({
-  page: z.string().optional().default('1').transform((data) => +data)
+  page: z.string().optional().default('1').transform((data) => +data),
+  bodyPartId: z.string().nullish()
 }).strict();
 
 export async function GET(req: NextRequest) {
   try{
     const page = req.nextUrl.searchParams.get('page');
-    const result = getExercisesSchema.safeParse({page});
+    const bodyPartId = req.nextUrl.searchParams.get('bodyPartId');
+    const result = getExercisesSchema.safeParse({page, bodyPartId});
     if(result.error) return Response.json({
       message: 'Please provide valid options'
     }, {
       status: 400
     });
 
-    const exercises = await db.query.exercises.findMany({
+    const exercise = await db.query.exercises.findMany({
+      ...(bodyPartId && {
+        where: eq(exercises.bodyPartId, +bodyPartId!),
+      }),
       with: {
         bodyPart: true
       },
       limit: 4,
       offset: (result.data?.page - 1) * 4
     })
+
     return Response.json(
       {
-        data: exercises
+        data: exercise
       },
       {
         status: 200,

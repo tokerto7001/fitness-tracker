@@ -20,5 +20,5 @@ export async function updateExercise(exerciseId: number, data: UpdateExerciseBod
 }
 
 export async function getExercises(data: GetExercisesQueryParams): Promise<{data: Exercises[] }>{
-    return await axiosClient.GET({url: `/api/exercises?page=${data.page}`})
+    return await axiosClient.GET({url: `/api/exercises`, params: data})
 }
