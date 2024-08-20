@@ -104,7 +104,7 @@ export default function AddExerciseDialog() {
       })
       reset();
       setDialogStatus(false);
-      router.push('/');
+      // router.push('/');
     }catch(err: any){
       const {data: urlData} = supabase.storage.from('fitness-tracker').getPublicUrl(fileName);
       if(urlData) await supabase.storage.from('fitness-tracker').remove([fileName]);

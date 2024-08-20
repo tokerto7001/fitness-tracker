@@ -24,8 +24,8 @@ export interface GetExercisesQueryParams {
 }
 
 export default function Home({ searchParams }: HomeProps) {
-  const { page = 1, bodyPartId } = searchParams;
-  if (isNaN(+page)) redirect(`/?page=1`);
+  const { page = 1, bodyPartId = 0 } = searchParams;
+  if (isNaN(+page) || !bodyPartId) redirect(`/?page=1&bodyPartId=${bodyPartId}`);
 
   const requestParams = {
     page: +page,
@@ -37,7 +37,7 @@ export default function Home({ searchParams }: HomeProps) {
   }
 
   const { data, isLoading, error } = useQuery({
-    queryKey: [`exercises?${JSON.stringify(requestParams)}`],
+    queryKey: [`exercises`, {page, bodyPartId}],
     queryFn: () => getExercises(requestParams),
   });
 
