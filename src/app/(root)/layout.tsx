@@ -14,7 +14,7 @@ export default async function Layout({
   if(error || !data?.user) redirect('/signin');
 
   return (
-    <div className="h-screen w-screen flex flex-col overflow-auto bg-slate-100">
+    <div className="min-h-screen w-screen flex flex-col overflow-auto bg-slate-100">
       <Header />
       {children}
     </div>

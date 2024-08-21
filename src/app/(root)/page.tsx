@@ -14,34 +14,38 @@ import Pagination from "@/components/shared/pagination";
 interface HomeProps {
   searchParams: {
     page: string;
-    bodyPartId?: string
+    bodyPartId?: string;
   };
 }
 
 export interface GetExercisesQueryParams {
   page?: number;
-  bodyPartId?: number
+  bodyPartId?: number;
 }
 
 export default function Home({ searchParams }: HomeProps) {
   const { page = 1, bodyPartId = 0 } = searchParams;
-  if (isNaN(+page) || !bodyPartId) redirect(`/?page=1&bodyPartId=${bodyPartId}`);
+  if (isNaN(+page) || !bodyPartId)
+    redirect(`/?page=1&bodyPartId=${bodyPartId}`);
 
   const requestParams = {
     page: +page,
-    ...(
-      bodyPartId && bodyPartId !== '0' && {
-        bodyPartId: +bodyPartId
-      }
-    )
-  }
+    ...(bodyPartId &&
+      bodyPartId !== "0" && {
+        bodyPartId: +bodyPartId,
+      }),
+  };
 
   const { data, isLoading, error } = useQuery({
-    queryKey: [`exercises`, {page, bodyPartId}],
+    queryKey: [`exercises`, { page, bodyPartId }],
     queryFn: () => getExercises(requestParams),
   });
 
-  const { data: bodyPartData, isLoading: bodyPartLoading, error: bodyPartError } = useQuery({
+  const {
+    data: bodyPartData,
+    isLoading: bodyPartLoading,
+    error: bodyPartError,
+  } = useQuery({
     queryKey: ["bodyParts"],
     queryFn: getBodyParts,
   });
@@ -56,28 +60,29 @@ export default function Home({ searchParams }: HomeProps) {
             <Image src={LoadingGif} alt="Loading" />
           </div>
         ) : (
-          <div className="md:w-5/6 md:grid md:grid-cols-3 md:gap-5 w-full flex flex-col items-center gap-8 md:items-stretch">
-            {data &&
-              data.data.map((exercise) => (
-                <ExerciseCard exercise={exercise} key={exercise.id} />
-              ))}
+          <div className="md:w-5/6  w-full ">
+            <div className="md:grid md:grid-cols-3 md:gap-5 flex flex-col items-center gap-8 md:items-stretch">
+              {data &&
+                data.data.map((exercise) => (
+                  <ExerciseCard exercise={exercise} key={exercise.id} />
+                ))}
+            </div>
+            <div className="w-full flex justify-center">
+              <Pagination
+                currentPage={+page}
+                baseUrlToNavigate={
+                  bodyPartId ? `/?bodyPartId=${bodyPartId}` : "/"
+                }
+                isNextDisabled={!data || data.data.length < 6}
+                isPreviousDisabled={+page < 2}
+              />
+            </div>
           </div>
         )}
         <div className="md:w-1/6 flex flex-col gap-6 w-full justify-center items-center md:items-baseline md:justify-start">
-          <BodyPartSelect
-            data={bodyPartData}
-            loading={bodyPartLoading}
-          />
+          <BodyPartSelect data={bodyPartData} loading={bodyPartLoading} />
           <AddExerciseDialog />
         </div>
-      </div>
-      <div className="w-full flex justify-center">
-        <Pagination 
-        currentPage={+page}
-        baseUrlToNavigate={bodyPartId ? `/?bodyPartId=${bodyPartId}` : '/'}
-        isNextDisabled={!data || data.data.length < 6}
-        isPreviousDisabled={+page < 2}
-        />
       </div>
     </>
   );
