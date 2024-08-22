@@ -77,7 +77,11 @@ export default function AddWorkout({ searchParams }: AddWorkoutProps) {
                 <div className="md:grid md:grid-cols-3 md:gap-5 flex flex-col items-center gap-8 md:items-stretch">
                   {data &&
                     data.data.map((exercise) => (
-                      <ExerciseCard exercise={exercise} key={exercise.id} />
+                      <ExerciseCard
+                        parentComponent="workouts"
+                        exercise={exercise}
+                        key={exercise.id}
+                      />
                     ))}
                 </div>
 

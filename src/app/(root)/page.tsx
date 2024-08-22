@@ -64,7 +64,11 @@ export default function Home({ searchParams }: HomeProps) {
             <div className="md:grid md:grid-cols-3 md:gap-5 flex flex-col items-center gap-8 md:items-stretch">
               {data &&
                 data.data.map((exercise) => (
-                  <ExerciseCard exercise={exercise} key={exercise.id} />
+                  <ExerciseCard
+                    parentComponent="exercises"
+                    exercise={exercise}
+                    key={exercise.id}
+                  />
                 ))}
             </div>
             <div className="w-full flex justify-center">
