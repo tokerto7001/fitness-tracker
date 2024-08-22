@@ -10,10 +10,10 @@ export async function GET() {
     const userWorkouts = await db.query.workouts.findMany({
         where: eq(workouts.userId, id)
     });
-    
+
     return Response.json(
       {
-        data: "sa",
+        data: userWorkouts,
       },
       {
         status: 200,

@@ -4,30 +4,41 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Exercises } from "@/db/schema";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import { faCheckCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import DeleteExerciseDialog from "./delete-exercise-dialog";
 import UpdateExerciseDialog from "./update-exercise-dialog";
 
 interface ExerciseCardProps {
   exercise: Exercises;
-  parentComponent: "workouts" | "exercises";
+  parentComponent: "exercises" | "workouts";
+  addExercise?: (exercise: Exercises) => void;
+  deleteExercise?: Function;
+  isAdded?: boolean;
 }
 
 export default function ExerciseCard({
   exercise,
   parentComponent,
+  addExercise,
+  deleteExercise,
+  isAdded = false
 }: ExerciseCardProps) {
   return (
     <Card
       className={`w-[60%] md:w-[85%] bg-white relative group  ${
         parentComponent === "workouts" ? "hover:cursor-pointer" : ""
       }`}
-      onClick={() => console.log("sa")}
+      onClick={() => parentComponent === 'workouts' && addExercise!(exercise)}
     >
       <div
         className={`text-black rounded-xl shadow-xl relative overflow-hidden text-sm md:text-md h-72 transition-opacity duration-200 ease-in-out ${
           parentComponent === "workouts" ? "hover:opacity-5" : ""
-        }`}
+        }
+        ${
+          parentComponent === 'workouts' && isAdded ? 'opacity-5' : ''
+        }
+        `
+      }
       >
         <div className="h-2/3 relative w-full">
           <CardHeader className="flex flex-row w-full justify-end items-start gap-3 p-1 absolute top-0 right-0 z-10 space-y-0">
@@ -58,8 +69,10 @@ export default function ExerciseCard({
       </div>
       {parentComponent === "workouts" ? (
         <FontAwesomeIcon
-          icon={faPlusCircle}
-          className="text-blue-800 absolute transform -translate-x-1/2 -translate-y-1/2 top-[50%] left-[50%] invisible group-hover:visible pointer-events-none text-5xl"
+          icon={isAdded ? faCheckCircle : faPlusCircle}
+          className={`text-blue-800 absolute transform -translate-x-1/2 -translate-y-1/2 top-[50%] left-[50%] invisible group-hover:visible pointer-events-none text-5xl ${
+            parentComponent === 'workouts' && isAdded ? 'visible' : ''
+          }`}
         />
       ) : null}
     </Card>

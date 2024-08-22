@@ -7,11 +7,12 @@ import { getExercises } from "@/services/exercises";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import LoadingGif from "@/../public/loading.gif";
 import ExerciseCard from "@/components/exercises/exercise-card";
 import Pagination from "@/components/shared/pagination";
 import BodyPartSelect from "@/components/exercises/body-part-select";
+import { Exercises } from "@/db/schema";
 
 interface AddWorkoutProps {
   searchParams: {
@@ -22,6 +23,8 @@ interface AddWorkoutProps {
 
 export default function AddWorkout({ searchParams }: AddWorkoutProps) {
   const inputValue = useRef("");
+
+  const [workoutExercises, setWorkoutExercises] = useState<Exercises[]>([]);
 
   const { page = 1, bodyPartId = 0 } = searchParams;
   if (isNaN(+page) || !bodyPartId)
@@ -50,6 +53,19 @@ export default function AddWorkout({ searchParams }: AddWorkoutProps) {
   });
 
   if (error || bodyPartError) throw new Error();
+
+  async function addExercise(exercise: Exercises){
+    const exists = workoutExercises.find((workoutExercise) => workoutExercise.id === exercise.id);
+    if(!exists) {
+      const newWorkOutExercise = [...workoutExercises];
+      newWorkOutExercise.push(exercise);
+      setWorkoutExercises(newWorkOutExercise);
+    }
+  }
+
+  async function deleteExercise(){
+    console.log('delete exercise')
+  }
 
   return (
     <>
@@ -81,6 +97,9 @@ export default function AddWorkout({ searchParams }: AddWorkoutProps) {
                         parentComponent="workouts"
                         exercise={exercise}
                         key={exercise.id}
+                        addExercise={addExercise}
+                        deleteExercise={deleteExercise}
+                        isAdded={Boolean(workoutExercises.find((workoutExercise) => workoutExercise.id === exercise.id))}
                       />
                     ))}
                 </div>
